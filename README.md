@@ -1,4 +1,4 @@
-# 025 — a transparency substrate for the Claude Agent SDK
+# M.I.D.A.S.
 
 M.I.D.A.S. is proof that agentic SDKs are not black boxes. It captures, on 7 channels, everything the
 SDK exposes, more than any existing solution, and can feed any control mechanism with better data than
