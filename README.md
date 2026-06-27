@@ -1,12 +1,15 @@
 # 025 — a transparency substrate for the Claude Agent SDK
 
-A sealed container that runs an AI coding agent (Anthropic's Claude Agent SDK, TypeScript) and records
-**everything the agent does**, verbatim, into one SQLite database, by forcing every action through a
-single instrumented gate. It is the public extract of **021**, the sealed reference build (described
-below): the proven capture core, vendored byte-for-byte and run on real workloads.
+M.I.D.A.S. is proof that agentic SDKs are not black boxes. It captures, on 7 channels, everything the
+SDK exposes, more than any existing solution, and can feed any control mechanism with better data than
+we could find. It observes, it does not control. Examples and research included. Use it, fork it, build
+in it. Light up the darkness!
+
+**See it in action** (a real run, captured): [two agents talking](https://war851.github.io/midas/live-run/two-agents-talking.html) · [an agent thinking](https://war851.github.io/midas/live-run/an-agent-thinking.html)
 
 The claim is narrow and falsifiable: *inside this slice (one SDK, one container, the standard tools),
-almost nothing the agent does is hidden.* Not a black box. See [the thesis](docs/explanation/transparency-thesis.md).
+almost nothing the agent does is hidden.* It is the public extract of **021**, the sealed reference
+build. See [the thesis](docs/explanation/transparency-thesis.md).
 
 ![The M.I.D.A.S. architecture: every agent action enters through the one gate, rises through the seven capture channels, and is caught in the persistent-storage spine.](architecture.png)
 
