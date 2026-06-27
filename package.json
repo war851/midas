@@ -1,0 +1,31 @@
+{
+  "name": "025-midas-public-v2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "025_midas_public_v2 capture-parity extract: the 021 sealed capture core vendored byte-for-byte and run on real workloads. SQLite is the canonical record.",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "instrument": "tsx src/instrument.ts",
+    "observe": "tsx src/observe.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "0.3.160",
+    "@anthropic-ai/sdk": "0.100.1",
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "better-sqlite3": "12.10.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "22.19.19",
+    "tsx": "4.22.4",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

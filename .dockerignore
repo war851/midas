@@ -1,0 +1,9 @@
+node_modules
+.git
+docs
+*.md
+PARITY-MANIFEST.md
+PARITY-REPORT.md
+.dockerignore
+evidence
+_workbench

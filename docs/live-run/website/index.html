@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The New SDLC With Vibe Coding — HLD Summary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:             #1b1b1f;
+      --card:           #232328;
+      --elevated:       #2b2b31;
+      --border-soft:    #3c3c43;
+      --border-mid:     #4a4a52;
+      --border-strong:  #8e8e93;
+      --text-primary:   #e3e3e8;
+      --text-body:      #c4c4cc;
+      --text-secondary: #9e9ea6;
+      --text-dim:       #6b6b73;
+
+      --font-inter: Inter, "Segoe UI", Calibri, sans-serif;
+      --font-mono:  "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+    }
+
+    html {
+      background-color: var(--bg);
+      color: var(--text-body);
+      font-family: var(--font-inter);
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 0 20px;
+    }
+
+    /* ── Container ────────────────────────────────────────── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 12px;
+      padding: 60px 0 0;
+    }
+
+    /* ── Header ───────────────────────────────────────────── */
+    .header {
+      margin-bottom: 52px;
+    }
+
+    .header__eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      line-height: 1.65;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .header__title {
+      font-family: var(--font-inter);
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    .header__subtitle {
+      font-family: var(--font-inter);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-body);
+      line-height: 1.8;
+      max-width: 680px;
+      margin-bottom: 18px;
+    }
+
+    .header__meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      line-height: 1.65;
+    }
+
+    /* ── Phase cards grid ─────────────────────────────────── */
+    .phases {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+
+    @media (min-width: 720px) {
+      .phases {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      /* Last card spans full width when count is odd */
+      .card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* ── Individual card ──────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border-top: 1px solid var(--border-soft);
+      border-right: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      border-left: 4px solid var(--accent, var(--border-mid));
+      border-radius: 8px;
+      padding: 26px 28px;
+    }
+
+    .card__phase-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+
+    .card__heading {
+      font-family: var(--font-inter);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .card__body {
+      font-family: var(--font-inter);
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-body);
+      line-height: 1.625;
+    }
+
+    /* Accent colours — one per card in prescribed order */
+    .card--1 { --accent: #fabb5c; }
+    .card--2 { --accent: #81c995; }
+    .card--3 { --accent: #8ab4f8; }
+    .card--4 { --accent: #aecbfa; }
+    .card--5 { --accent: #d7aefb; }
+    .card--6 { --accent: #b4b7e8; }
+    .card--7 { --accent: #f28b82; }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 22px 0 44px;
+    }
+
+    .footer__text {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      line-height: 1.65;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header class="header">
+      <span class="header__eyebrow">High-Level Design Summary</span>
+      <h1 class="header__title">The New SDLC With Vibe Coding</h1>
+      <p class="header__subtitle">From ad-hoc prompting to agentic engineering — how AI is reshaping every phase of the software development life cycle, and what it demands from developers, teams, and organisations.</p>
+      <p class="header__meta">Source: Google — "The New SDLC With Vibe Coding" (Agents Whitepaper Series, May 2026) · Addy Osmani, Shubham Saboo, Sokratis Kartakis</p>
+    </header>
+
+    <!-- ── Phase cards ─────────────────────────────────────── -->
+    <main class="phases">
+
+      <article class="card card--1">
+        <span class="card__phase-label">Phase 01</span>
+        <h2 class="card__heading">From Syntax to Intent</h2>
+        <p class="card__body">Programming is undergoing its most significant transformation since high-level languages: developers now express <em>what</em> they want rather than <em>how</em> to build it, with AI agents handling implementation. By early 2026, 85% of professional developers regularly use AI coding agents and an estimated 41% of all new code is AI-generated.</p>
+      </article>
+
+      <article class="card card--2">
+        <span class="card__phase-label">Phase 02</span>
+        <h2 class="card__heading">The Vibe Coding to Agentic Engineering Spectrum</h2>
+        <p class="card__body">The decisive differentiator is not whether AI is used, but how much structure, verification, and human judgment surrounds its output. Vibe coding — casual prompting with minimal review — suits prototypes and personal projects; agentic engineering — automated test suites, CI/CD gates, and LM-judge evals — is required for production systems that organisations depend on.</p>
+      </article>
+
+      <article class="card card--3">
+        <span class="card__phase-label">Phase 03</span>
+        <h2 class="card__heading">Context Engineering</h2>
+        <p class="card__body">Output quality depends less on clever prompts than on richness of context: instructions, knowledge, memory, examples, tools, and guardrails. The boundary between static context (always loaded) and dynamic context (pulled on demand via Agent Skills) is a first-class architectural decision — too much static context wastes tokens, too little causes agents to forget critical rules.</p>
+      </article>
+
+      <article class="card card--4">
+        <span class="card__phase-label">Phase 04</span>
+        <h2 class="card__heading">AI Across Every SDLC Phase</h2>
+        <p class="card__body">Requirements become a live human-AI conversation producing specs and prototypes simultaneously. Architecture stays human-centric for trade-off decisions. Implementation shifts from writing to reviewing and guiding AI output. Testing demands both output evaluation and trajectory evaluation. Code review and deployment gain AI-powered augmentation, and maintenance of once-impenetrable legacy codebases becomes tractable.</p>
+      </article>
+
+      <article class="card card--5">
+        <span class="card__phase-label">Phase 05</span>
+        <h2 class="card__heading">Harness Engineering</h2>
+        <p class="card__body">A raw model is not an agent — it becomes one when a harness provides instructions and rule files, tools, sandboxes, orchestration logic, deterministic hooks, and observability. The harness, not the underlying model, dominates the behaviour developers experience: most agent failures trace back to a missing tool, a vague rule, or an absent guardrail rather than model capability.</p>
+      </article>
+
+      <article class="card card--6">
+        <span class="card__phase-label">Phase 06</span>
+        <h2 class="card__heading">Conductors and Orchestrators</h2>
+        <p class="card__body">Developers now move fluidly between two modes: conductor — real-time, hands-on direction of an AI pair-programmer inside the IDE — and orchestrator — async, high-level delegation to background agents that produce pull requests without a human writing a line of code. The orchestrator role demands specification, decomposition, evaluation, and system-design skills over syntax fluency.</p>
+      </article>
+
+      <article class="card card--7">
+        <span class="card__phase-label">Phase 07</span>
+        <h2 class="card__heading">The Economics of AI Development</h2>
+        <p class="card__body">Vibe coding appears cheap upfront but hides compounding operational costs: token burn from unstructured prompting loops, maintenance debt from inconsistent AI-generated code, and expensive security remediation. Agentic engineering requires upfront investment in context, tests, and harness infrastructure but dramatically lowers per-feature marginal cost — especially through intelligent model routing that reserves large frontier models for complex tasks and cheaper models for deterministic work.</p>
+      </article>
+
+    </main>
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer class="footer">
+      <p class="footer__text">HLD Summary · Seven Phases · Static Site · No Framework · Content Derived Strictly From Source</p>
+    </footer>
+
+  </div>
+</body>
+</html>

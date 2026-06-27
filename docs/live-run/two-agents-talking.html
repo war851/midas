@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Agents Talking · Live Run</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#1b1b1f; --card:#232328; --elevated:#2b2b31;
+    --bsoft:#3c3c43; --bmid:#4a4a52; --bstrong:#8e8e93;
+    --tpri:#e3e3e8; --tbody:#c4c4cc; --tsec:#9e9ea6; --tdim:#6b6b73;
+    --amber:#fabb5c; --green:#81c995; --blue:#8ab4f8; --lblue:#aecbfa;
+    --coral:#f28b82; --purple:#d7aefb; --lavender:#b4b7e8;
+    --inter:Inter,"Segoe UI",Calibri,sans-serif;
+    --mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+  }
+  body{background:var(--bg);color:var(--tbody);font-family:var(--inter);line-height:1.8;
+    -webkit-font-smoothing:antialiased;padding:40px 20px}
+  .wrap{max-width:920px;margin:0 auto}
+  .mono{font-family:var(--mono)}
+  .caps{font-family:var(--mono);text-transform:uppercase;letter-spacing:.14em;font-weight:600}
+
+  header{border-bottom:1px solid var(--bsoft);padding-bottom:24px;margin-bottom:36px}
+  h1{font-family:var(--inter);font-weight:600;font-size:34px;line-height:1.2;color:var(--tpri);letter-spacing:-.01em}
+  .sub{font-family:var(--mono);text-transform:uppercase;letter-spacing:.14em;font-weight:600;
+    font-size:13px;color:var(--amber);margin-top:10px}
+  .prov{font-family:var(--mono);font-size:12px;color:var(--tdim);margin-top:14px;line-height:1.65}
+  .prov b{color:var(--tsec);font-weight:400}
+
+  .lens{margin:34px 0 16px}
+  .lens .tag{font-size:11px;color:var(--tdim);display:block;margin-bottom:4px}
+  .lens .lt{font-family:var(--inter);font-weight:600;font-size:19px;color:var(--tpri)}
+  .lens p{font-size:15px;color:var(--tsec);margin-top:6px;max-width:62ch}
+
+  /* dialogue */
+  .turn{background:var(--card);border:1px solid var(--bsoft);border-radius:8px;padding:18px 20px;margin:12px 0}
+  .turn.lead{border-left:4px solid var(--blue)}
+  .turn.judge{border-left:4px solid var(--coral)}
+  .who{font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:600;margin-bottom:8px;
+    display:flex;gap:10px;align-items:center}
+  .who .lead-c{color:var(--blue)} .who .judge-c{color:var(--coral)}
+  .who .id{color:var(--tdim);letter-spacing:.04em}
+  .say{font-size:15px;color:var(--tbody)}
+  .say .lead-name{color:var(--blue);font-weight:600} .say .judge-name{color:var(--coral);font-weight:600}
+
+  .beat{font-family:var(--mono);font-size:12px;color:var(--tdim);text-align:center;margin:10px 0;letter-spacing:.04em}
+  .gap{background:#241b1b;border:1px dashed var(--coral);border-radius:8px;padding:14px 18px;margin:12px 0;text-align:center}
+  .gap .g1{font-family:var(--mono);font-weight:600;color:var(--coral);font-size:13px;letter-spacing:.04em}
+  .gap .g2{font-size:13px;color:var(--tsec);margin-top:5px}
+
+  /* expandable verbatim cell */
+  .toggle{margin-top:12px}
+  .toggle>summary{cursor:pointer;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--tsec);list-style:none}
+  .toggle>summary::before{content:"▸ ";color:var(--bstrong)}
+  .toggle[open]>summary::before{content:"▾ "}
+  .cell{margin-top:10px;background:var(--bg);border:1px solid var(--bmid);border-radius:6px;padding:14px;overflow:auto}
+  .cell .meta{font-family:var(--mono);font-size:11px;color:var(--tdim);margin-bottom:8px;letter-spacing:.04em}
+  .cell pre{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--tbody);white-space:pre-wrap;word-break:break-word}
+  .cell pre .k{color:var(--lavender)} .cell pre .pass{color:var(--green);font-weight:600}
+
+  /* channels table */
+  .chtab{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-top:8px}
+  .chtab th{text-align:left;color:var(--tdim);font-weight:600;text-transform:uppercase;letter-spacing:.1em;
+    font-size:10px;padding:8px 10px;border-bottom:1px solid var(--bmid)}
+  .chtab td{padding:9px 10px;border-bottom:1px solid var(--bsoft);color:var(--tbody);vertical-align:top}
+  .chtab tr:hover td{background:var(--elevated)}
+  .chip{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;
+    padding:2px 8px;border-radius:4px;text-transform:uppercase}
+  .c-ms{color:var(--blue);background:#1e2d4a;border:1px solid #2d4470}
+  .c-gate{color:var(--amber);background:#3d3220;border:1px solid #5c4a28}
+  .c-otel{color:var(--lavender);background:#252540;border:1px solid #3a3a60}
+  .c-hook{color:var(--purple);background:#2e1e3e;border:1px solid #4a2d65}
+  .who-lead{color:var(--blue)} .who-judge{color:var(--coral)}
+  .tid{color:var(--tdim)}
+
+  footer{margin-top:40px;border-top:1px solid var(--bsoft);padding-top:18px;
+    font-family:var(--mono);font-size:11px;color:var(--tdim);line-height:1.7}
+  footer b{color:var(--tsec);font-weight:400}
+  .credit{position:fixed;top:14px;right:18px;font-family:var(--mono);font-size:11px;color:var(--tdim);letter-spacing:.04em}
+  @media(max-width:560px){.credit{position:static;text-align:right;margin-bottom:10px}}
+</style>
+</head>
+<body>
+<div class="credit">Csaba Toldi · Toldi.io</div>
+<div class="wrap">
+
+<header>
+  <h1>TWO AGENTS TALKING&hellip;</h1>
+  <div class="sub">Live run: build a website</div>
+  <div class="prov">
+    RUN <b>live-website-1</b> &nbsp;·&nbsp; MODEL <b>claude-sonnet-4-6</b> &nbsp;·&nbsp; DISCLOSE <b>on</b>
+    &nbsp;·&nbsp; MAX_TURNS <b>60</b> &nbsp;·&nbsp; 2026-06-27 &nbsp;·&nbsp; every id below is a row in the captured spine
+  </div>
+</header>
+
+<!-- LENS 1 -->
+<div class="lens">
+  <span class="caps tag">Lens 1</span>
+  <span class="lt">The conversation</span>
+  <p>The lead agent hands one job to a second agent, a judge, and they talk. Each line below is captured verbatim. Click <span class="mono">show the captured cell</span> to read the exact row.</p>
+</div>
+
+<!-- lead dispatches -->
+<div class="turn lead">
+  <div class="who"><span class="lead-c">LEAD AGENT</span><span class="id mono">message_stream · tool_use · id 288 · 13:46:48</span></div>
+  <div class="say"><span class="lead-name">Lead</span> &rarr; <span class="judge-name">Judge</span>: spawns a sub-agent and hands it a full brief, <em>&ldquo;You are a judge. Read the built file and grade it against the five acceptance criteria&hellip;&rdquo;</em>, spelling out all five ACs, the exact palette, and a source summary.</div>
+  <details class="toggle">
+    <summary>show the captured cell</summary>
+    <div class="cell">
+      <div class="meta">events.id=288 · channel=message_stream · tool=Agent · tool_use_id=toolu_01ARn… · agent=lead</div>
+<pre><span class="k">"description"</span>: "Judge: grade built site against AC criteria",
+<span class="k">"prompt"</span>: "You are a judge. Read the built file at `/tmp/work/output/index.html`
+and grade it against each of the five acceptance criteria below. Return PASS
+or FAIL per criterion with a one-sentence reason, then an overall verdict.
+
+  AC1 — Opens standalone …
+  AC2 — Content fidelity: 5-7 phase cards synthesised from the source …
+  AC3 — Palette: background exactly #1b1b1f … one accent per card in order …
+  AC4 — Typography: Inter + JetBrains Mono … only weights 400 and 600 …
+  AC5 — Structure & responsive: accent-stripe cards … no shadows …"</pre>
+    </div>
+  </details>
+</div>
+
+<div class="beat">gate allows the hand-off &nbsp;·&nbsp; <span class="mono">gate · PreToolUse.gate · id 290</span></div>
+
+<!-- judge wakes -->
+<div class="turn judge">
+  <div class="who"><span class="judge-c">JUDGE (sub-agent)</span><span class="id mono">hook_callback · SubagentStart · id 291 · 13:46:49</span></div>
+  <div class="say"><span class="judge-name">Judge</span> wakes up as its own agent (<span class="mono">agent_id a8e9…</span>).</div>
+</div>
+
+<!-- judge acts -->
+<div class="turn judge">
+  <div class="who"><span class="judge-c">JUDGE acts</span><span class="id mono">gate + hook_callback · Read · id 304 · 13:46:51</span></div>
+  <div class="say"><span class="judge-name">Judge</span> does real work: it reads the website to grade it. Its action is fully captured, down to the gate decision and the hooks, tagged with its own <span class="mono">agent_id</span>.</div>
+  <details class="toggle">
+    <summary>show the captured cell</summary>
+    <div class="cell">
+      <div class="meta">events.id=304 · channel=hook_callback · event=PreToolUse · tool=Read · agent=a8e9…</div>
+<pre><span class="k">"tool_input"</span>: { <span class="k">"file_path"</span>: "/tmp/work/output/index.html" }</pre>
+    </div>
+  </details>
+</div>
+
+<!-- the gap -->
+<div class="gap">
+  <div class="g1">THE ONE NARROW GAP: NO THINKING-BLOCK STREAM OF ITS OWN</div>
+  <div class="g2">13:46:51 &rarr; 13:47:20. We capture the bookends of the judge&rsquo;s work: its <span class="mono">Read</span>, and the full reasoned verdict it returns (it grades criterion by criterion, in plain text). What the sub-agent never emits is a thinking-block stream of its own: <span class="mono">a8e9</span> has zero <span class="mono">message_stream</span> rows. So we see what it read and its reasoning as written into the verdict, just not any private thinking it held back from that answer.</div>
+</div>
+
+<!-- judge answers -->
+<div class="turn judge">
+  <div class="who"><span class="judge-c">JUDGE</span> &rarr; <span class="who-lead">LEAD</span><span class="id mono">message_stream · tool_result · id 340 · 13:47:20</span></div>
+  <div class="say"><span class="judge-name">Judge</span> answers with a <em>reasoned</em> grading, not just a verdict, criterion by criterion, ending <span class="mono pass" style="color:var(--green)">OVERALL: PASS</span>.</div>
+  <details class="toggle">
+    <summary>show the captured cell</summary>
+    <div class="cell">
+      <div class="meta">events.id=340 · channel=message_stream · event=tool_result · returned to agent=lead</div>
+<pre>Now I have the full file. Let me evaluate each criterion carefully.
+
+<span class="k">AC1 — Opens standalone:</span> valid HTML, DOCTYPE at line 1, fonts via a single
+Google Fonts link, no local assets, no bundler, no server paths. <span class="pass">AC1: PASS</span>
+
+<span class="k">AC2 — Content fidelity:</span> 7 cards (Phases 01-07), Title-Case headings,
+each 1-2 sentences, mapped to source topics, no invented content. <span class="pass">AC2: PASS</span>
+
+<span class="k">AC3 — Palette:</span> background #1b1b1f, card #232328, one accent per card in
+order … <span class="pass">AC3: PASS</span>
+
+  … AC4, AC5 …  <span class="pass">OVERALL: PASS</span></pre>
+    </div>
+  </details>
+</div>
+
+<!-- LENS 2 -->
+<div class="lens">
+  <span class="caps tag">Lens 2</span>
+  <span class="lt">The same exchange, every channel</span>
+  <p>The identical hand-off, seen by the independent capture channels at once. One <span class="mono">tool_use_id</span> threads the <span class="mono">Agent</span> call across <span class="mono">message_stream</span>, <span class="mono">gate</span>, <span class="mono">otel</span> and <span class="mono">hook_callback</span>: four witnesses agreeing on the same moment.</p>
+</div>
+
+<table class="chtab">
+  <thead><tr><th>time</th><th>id</th><th>who</th><th>channel</th><th>event</th></tr></thead>
+  <tbody>
+    <tr><td>13:46:48</td><td>288</td><td class="who-lead">lead</td><td><span class="chip c-ms">message_stream</span></td><td>tool_use · Agent</td></tr>
+    <tr><td>13:46:49</td><td>289</td><td class="who-lead">lead</td><td><span class="chip c-hook">hook_callback</span></td><td>PreToolUse · Agent</td></tr>
+    <tr><td>13:46:49</td><td>290</td><td class="who-lead">lead</td><td><span class="chip c-gate">gate</span></td><td>PreToolUse.gate · Agent</td></tr>
+    <tr><td>13:46:49</td><td>291</td><td class="who-judge">a8e9</td><td><span class="chip c-hook">hook_callback</span></td><td>SubagentStart</td></tr>
+    <tr><td>13:46:50</td><td>296</td><td class="who-lead">lead</td><td><span class="chip c-otel">otel</span></td><td>tool_decision · Agent</td></tr>
+    <tr><td>13:46:51</td><td>304</td><td class="who-judge">a8e9</td><td><span class="chip c-hook">hook_callback</span></td><td>PreToolUse · Read</td></tr>
+    <tr><td>13:46:51</td><td>305</td><td class="who-judge">a8e9</td><td><span class="chip c-gate">gate</span></td><td>PreToolUse.gate · Read</td></tr>
+    <tr><td>13:46:51</td><td>311</td><td class="who-judge">a8e9</td><td><span class="chip c-hook">hook_callback</span></td><td>PostToolUse · Read</td></tr>
+    <tr><td>13:47:20</td><td>336</td><td class="who-judge">a8e9</td><td><span class="chip c-hook">hook_callback</span></td><td>SubagentStop</td></tr>
+    <tr><td>13:47:20</td><td>340</td><td class="who-lead">lead</td><td><span class="chip c-ms">message_stream</span></td><td>tool_result</td></tr>
+    <tr><td>13:47:21</td><td>347</td><td class="who-lead">lead</td><td><span class="chip c-otel">otel</span></td><td>tool_result · Agent</td></tr>
+  </tbody>
+</table>
+
+<footer>
+  <b>The data:</b> every <span class="mono">id</span> above resolves to a row in <span class="mono">spine-anonymized.json</span> (this run, account identity removed, structural ids kept).
+  <span class="mono">tool_use_id</span> <span class="mono">toolu_01ARn…</span> is the thread; <span class="mono">agent_id</span> is who is speaking.
+  <br><b>Two lenses, one record.</b> The conversation is the story, the channels are the proof. They are the same captured data, read two ways.
+</footer>
+
+</div>
+</body>
+</html>

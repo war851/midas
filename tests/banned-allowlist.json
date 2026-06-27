@@ -1,0 +1,12 @@
+{
+  "_doc": "Provenance allowlist for the banned-pattern guard (contract §2 'Guard exemption', d3 adjudication 2026-06-10). Each entry pins a DOCUMENTARY occurrence of a banned term — a comment or a data/JSON provenance string that NAMES the term while documenting its removal/history. An occurrence is exempt ONLY if its file matches AND the source line CONTAINS the entry's `anchor` (a deterministic static substring, no per-instance discretion). The same token operating as a LIVE MECHANISM lands on a line without the anchor and is NEVER exempt. This list is reviewed/Overwatch-signed; adding an entry is a deliberate, visible act. Editing frozen 021 data to delete a historical word is forbidden (cosmetic gaming), which is why these stay and are allowlisted instead.",
+  "allow": [
+    { "file": "src/spine/db.ts", "anchor": "reclassification buckets are DELETED", "tokens": ["proven_unreachable", "invoked_recorded", "reclassification"], "reason": "comment recording the deletion of the two buckets + the word reclassification" },
+    { "file": "src/coverage/standard-hooks.json", "anchor": "the ledger records fired | proven_unreachable, never the expectation", "tokens": ["proven_unreachable"], "reason": "provenance string narrating the PRIOR (deleted) battery semantics; pure data, not a live status value" },
+    { "file": "src/coverage/drivers.ts", "anchor": "No mop-up: each item gets", "tokens": ["mop-up"], "reason": "comment documenting the no-mop-up rule" },
+    { "file": "src/coverage/drivers.ts", "anchor": "Each is ONE attempt (no mop-up).", "tokens": ["mop-up"], "reason": "comment documenting the no-mop-up rule" },
+    { "file": "src/coverage/drivers.ts", "anchor": "ONE attempt, no retry/mop-up.", "tokens": ["mop-up"], "reason": "comment documenting the no-mop-up rule" },
+    { "file": "src/coverage/matrix.ts", "anchor": "in isolation (no sweep, no mop-up)", "tokens": ["mop-up"], "reason": "comment documenting the no-mop-up rule" },
+    { "file": "src/coverage/matrix.ts", "anchor": "// ONE attempt, no mop-up", "tokens": ["mop-up"], "reason": "trailing comment documenting the no-mop-up rule" }
+  ]
+}

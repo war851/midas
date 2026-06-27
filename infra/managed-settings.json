@@ -1,0 +1,20 @@
+{
+  "_comment": "025_midas_public_v2 managed-settings OTel lock. Env block is BYTE-IDENTICAL to 021's sealed M4 (commit 32604b2): the telemetry config is what makes capture identical. Receiver stays container-internal 127.0.0.1:3211 (separate network 025_midas_public_v2_net, no host collision, same internal port as 021/024). Only this comment differs.",
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://127.0.0.1:3211",
+    "OTEL_EXPORTER_OTLP_PROTOCOL": "http/json",
+    "OTEL_LOGS_EXPORTER": "otlp",
+    "OTEL_METRICS_EXPORTER": "otlp",
+    "OTEL_TRACES_EXPORTER": "otlp",
+    "OTEL_LOG_USER_PROMPTS": "1",
+    "OTEL_LOG_TOOL_DETAILS": "1",
+    "OTEL_LOG_TOOL_CONTENT": "1",
+    "OTEL_LOG_RAW_API_BODIES": "file:/data/bodies",
+    "OTEL_LOGS_EXPORT_INTERVAL": "1000",
+    "OTEL_METRIC_EXPORT_INTERVAL": "2000",
+    "OTEL_BSP_SCHEDULE_DELAY": "1000",
+    "CLAUDE_CODE_ENHANCED_TELEMETRY_BETA": "1",
+    "ENABLE_BETA_TRACING_DETAILED": "1"
+  }
+}

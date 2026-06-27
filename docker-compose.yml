@@ -1,0 +1,45 @@
+# 025_midas_public_v2 — capture-parity build. Fully isolated (own network + volumes).
+# `app` = the vendored 021 capture core + the agent-free parity suite, always on (sleep infinity).
+# The Langfuse `viewer` stack is intentionally OMITTED here: it is fail-open and not exercised by the
+# capture-parity proof (manifest §3.E). The app service binds NO host port (same as 021's app); the
+# OTel receiver runs container-internal on 127.0.0.1:3211. Disclosed deltas vs 021's compose: project /
+# container / image / network / volume names (025_midas_public_v2_*), and `env_file: .env` is dropped
+# (no Langfuse keys needed for the agent-free parity run). The five :ro mounts, the sqlite volume, and
+# the SQLITE_PATH / CLAUDE_CONFIG_DIR / MIDAS_MODEL env are identical in structure to 021's app service.
+name: 025_midas_public_v2
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: 025_midas_public_v2_app:0.1.0
+    container_name: 025_midas_public_v2_app
+    environment:
+      CLAUDE_CONFIG_DIR: /data/claude-config
+      SQLITE_PATH: /data/sqlite/transparency.sqlite
+      MIDAS_MODEL: claude-sonnet-4-6
+    # HERMETICITY (vendored from 021's M4 seal): the five tracked build mounts are READ-ONLY so an
+    # agent under test can never mutate the substrate it is observed on. Scratch is writable only under
+    # /tmp; the SQLite spine writes to the sqlite_data volume; node_modules stays image-layer.
+    volumes:
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./package.json:/app/package.json:ro
+      - ./vitest.config.ts:/app/vitest.config.ts:ro
+      - claude_config:/data/claude-config
+      - sqlite_data:/data/sqlite
+    working_dir: /app
+    networks:
+      - 025_midas_public_v2_net
+
+networks:
+  025_midas_public_v2_net:
+    name: 025_midas_public_v2_net
+
+volumes:
+  claude_config:
+    name: 025_midas_public_v2_claude_config
+  sqlite_data:
+    name: 025_midas_public_v2_sqlite_data
